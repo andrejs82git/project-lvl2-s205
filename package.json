@@ -1,0 +1,46 @@
+{
+  "name": "project-lvl2-s205",
+  "version": "0.0.0",
+  "description": "Compares two configuration files and shows a difference.",
+  "bin": {
+    "gendiff": "dist/bin/gendiff.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "babel-node": "babel-node",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublish": "npm run build",
+    "eslint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrejs82git/project-lvl2-s205.git"
+  },
+  "keywords": [
+    "js"
+  ],
+  "author": "Sokolov Andrej",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrejs82git/project-lvl2-s205/issues"
+  },
+  "homepage": "https://github.com/andrejs82git/project-lvl2-s205#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0"
+  },
+  "dependencies": {
+    "commander": "^2.12.2",
+    "readline-sync": "^1.4.7"
+  },
+  "main": "index.js"
+}
