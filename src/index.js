@@ -1,5 +1,4 @@
-const program = require('commander');
-
+import program from 'commander';
 
 export default () => {
   program
