@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import run from '../index';
+import { gendiffCommander as run } from '..';
 
 run();
