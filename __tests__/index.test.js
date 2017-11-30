@@ -13,6 +13,11 @@ test('gendiff yaml', () => {
   expect(gendiff(`${fixture}/before.yml`, `${fixture}/after.yml`)).toBe(diff);
 });
 
+test('gendiff ini', () => {
+  const diff = fs.readFileSync(`${fixture}/result.txt`, 'utf8').trim();
+  expect(gendiff(`${fixture}/before.ini`, `${fixture}/after.ini`)).toBe(diff);
+});
+
 test('arrDiff', () => {
   expect(arrDiff([1, 2, 3], [2, 3])).toEqual([1]);
 });

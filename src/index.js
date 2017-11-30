@@ -1,14 +1,18 @@
 import program from 'commander';
 import fs from 'fs';
 import yaml from 'js-yaml';
+import ini from 'ini';
 
 const jsonRead = path => JSON.parse(fs.readFileSync(path, 'utf8'));
 
 const yamlRead = path => yaml.safeLoad(fs.readFileSync(path, 'utf8'));
 
+const iniRead = path => ini.parse(fs.readFileSync(path, 'utf8'));
+
 const read = (path) => {
   if (path.endsWith('json')) return jsonRead(path);
   if (path.endsWith('yml')) return yamlRead(path);
+  if (path.endsWith('ini')) return iniRead(path);
   throw new Error(`File ${path} can not be parsed!`);
 };
 
