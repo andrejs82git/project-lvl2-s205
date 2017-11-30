@@ -1,9 +1,19 @@
 import program from 'commander';
 import fs from 'fs';
+import yaml from 'js-yaml';
+
+const jsonRead = path => JSON.parse(fs.readFileSync(path, 'utf8'));
+
+const yamlRead = path => yaml.safeLoad(fs.readFileSync(path, 'utf8'));
+
+const read = (path) => {
+  if (path.endsWith('json')) return jsonRead(path);
+  if (path.endsWith('yml')) return yamlRead(path);
+  throw new Error(`File ${path} can not be parsed!`);
+};
 
 const walker = (before, after, func) => {
   const unionKeys = new Set([...Object.keys(before), ...Object.keys(after)]);
-  console.log(unionKeys);
   unionKeys.forEach((key) => {
     func(key, before[key], after[key]);
   });
@@ -13,8 +23,8 @@ const toView = view =>
   `{${view.reduce((acc, val) => `${acc}\n  ${val}`, '')}\n}`;
 
 const gendiff = (firstConfig, secondConfig) => {
-  const before = JSON.parse(fs.readFileSync(firstConfig, 'utf8'));
-  const after = JSON.parse(fs.readFileSync(secondConfig, 'utf8'));
+  const before = read(firstConfig);
+  const after = read(secondConfig);
 
   const result = [];
   walker(before, after, (key, bvalue, avalue) => {

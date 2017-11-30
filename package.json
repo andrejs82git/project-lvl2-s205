@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "commander": "^2.12.2",
+    "js-yaml": "^3.10.0",
     "readline-sync": "^1.4.7"
   },
   "main": "index.js"
