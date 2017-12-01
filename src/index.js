@@ -3,6 +3,7 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
+const JSON_LEAD_SPACES = 2;
 export const getFileExt = path => path.split('.').pop();
 export const unique = array =>
   array.filter((item, pos, arr) => arr.indexOf(item) === pos);
@@ -25,23 +26,23 @@ const walker = (before, after, func) => {
 };
 
 const toView = view =>
-  `{${view.reduce((acc, val) => `${acc}\n  ${val}`, '')}\n}`;
+  JSON.stringify(view, null, JSON_LEAD_SPACES).replace(/[\",]/g, '');
 
 const gendiff = (firstConfig, secondConfig) => {
   const before = read(firstConfig);
   const after = read(secondConfig);
 
-  const result = [];
+  const result = {};
   walker(before, after, (key, bvalue, avalue) => {
     if (bvalue === avalue) {
-      result.push(`  ${key}: ${bvalue}`);
+      result[`  ${key}`] = `${bvalue}`;
     } else if (typeof bvalue === 'undefined') {
-      result.push(`+ ${key}: ${avalue}`);
+      result[`+ ${key}`] = `${avalue}`;
     } else if (typeof avalue === 'undefined') {
-      result.push(`- ${key}: ${bvalue}`);
+      result[`- ${key}`] = `${bvalue}`;
     } else {
-      result.push(`+ ${key}: ${avalue}`);
-      result.push(`- ${key}: ${bvalue}`);
+      result[`+ ${key}`] = `${avalue}`;
+      result[`- ${key}`] = `${bvalue}`;
     }
   });
 
