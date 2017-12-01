@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -20,7 +21,7 @@ const read = (fpath) => {
 };
 
 const walker = (before, after, func) => {
-  const unionKeys = unique([...Object.keys(before), ...Object.keys(after)]);
+  const unionKeys = _.uniq([..._.keys(before),..._.keys(after)]);
   unionKeys.forEach((key) => {
     func(key, before[key], after[key]);
   });
