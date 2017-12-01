@@ -21,7 +21,7 @@ const read = (fpath) => {
 };
 
 const walker = (before, after, func) => {
-  const unionKeys = _.uniq([..._.keys(before),..._.keys(after)]);
+  const unionKeys = _.uniq([..._.keys(before), ..._.keys(after)]);
   unionKeys.forEach((key) => {
     func(key, before[key], after[key]);
   });
