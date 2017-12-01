@@ -1,4 +1,3 @@
-import program from 'commander';
 import fs from 'fs';
 import yaml from 'js-yaml';
 import ini from 'ini';
@@ -52,19 +51,4 @@ const gendiff = (firstConfig, secondConfig) => {
 
 export const arrDiff = (arr1, arr2) => arr1.filter(x => arr2.indexOf(x) === -1);
 
-const gendiffCommander = () => {
-  program
-    .version('0.0.1')
-    .arguments('<firstConfig> <secondConfig>')
-    .description('Compares two configuration files and shows a difference.')
-    .option('-f, --format [type]', 'Output format')
-    .action((firstConfig, secondConfig, options) => {
-      const result = gendiff(firstConfig, secondConfig, options.format);
-      console.log(result);
-    });
-
-  program.parse(process.argv);
-};
-
-export { gendiffCommander };
 export default gendiff;
