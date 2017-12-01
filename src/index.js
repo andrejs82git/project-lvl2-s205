@@ -1,21 +1,22 @@
 import fs from 'fs';
+import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
 const JSON_LEAD_SPACES = 2;
 
-export const getFileExt = path => path.split('.').pop();
+export const getFileExt = fpath => path.extname(fpath).replace('.', '');
+
 export const unique = array =>
   array.filter((item, pos, arr) => arr.indexOf(item) === pos);
 
-
-const read = (path) => {
+const read = (fpath) => {
   const readers = {
     json: p => JSON.parse(fs.readFileSync(p, 'utf8')),
     yml: p => yaml.safeLoad(fs.readFileSync(p, 'utf8')),
     ini: p => ini.parse(fs.readFileSync(p, 'utf8')),
   };
-  return readers[getFileExt(path)](path);
+  return readers[getFileExt(fpath)](fpath);
 };
 
 const walker = (before, after, func) => {
@@ -28,10 +29,7 @@ const walker = (before, after, func) => {
 const toView = view =>
   JSON.stringify(view, null, JSON_LEAD_SPACES).replace(/[",]/g, '');
 
-const gendiff = (firstConfig, secondConfig) => {
-  const before = read(firstConfig);
-  const after = read(secondConfig);
-
+const parse = (before, after) => {
   const result = {};
   walker(before, after, (key, bvalue, avalue) => {
     if (bvalue === avalue) {
@@ -47,6 +45,12 @@ const gendiff = (firstConfig, secondConfig) => {
   });
 
   return toView(result);
+};
+
+const gendiff = (firstConfig, secondConfig) => {
+  const before = read(firstConfig);
+  const after = read(secondConfig);
+  return parse(before, after);
 };
 
 export const arrDiff = (arr1, arr2) => arr1.filter(x => arr2.indexOf(x) === -1);
