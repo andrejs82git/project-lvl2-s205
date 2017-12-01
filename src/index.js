@@ -54,6 +54,4 @@ const gendiff = (firstConfig, secondConfig) => {
   return parse(before, after);
 };
 
-export const arrDiff = (arr1, arr2) => arr1.filter(x => arr2.indexOf(x) === -1);
-
 export default gendiff;

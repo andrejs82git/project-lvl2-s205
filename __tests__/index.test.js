@@ -18,10 +18,6 @@ test('gendiff ini', () => {
   expect(gendiff(`${fixture}/before.ini`, `${fixture}/after.ini`)).toBe(diff);
 });
 
-test('arrDiff', () => {
-  expect(arrDiff([1, 2, 3], [2, 3])).toEqual([1]);
-});
-
 test('get extension of file', () => {
   expect(getFileExt('/asd/a/sdf/asdfasdf.yml')).toBe('yml');
 });
