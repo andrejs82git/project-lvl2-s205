@@ -3,17 +3,15 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const jsonRead = path => JSON.parse(fs.readFileSync(path, 'utf8'));
-
-const yamlRead = path => yaml.safeLoad(fs.readFileSync(path, 'utf8'));
-
-const iniRead = path => ini.parse(fs.readFileSync(path, 'utf8'));
+export const getFileExt = path => path.split('.').pop();
 
 const read = (path) => {
-  if (path.endsWith('json')) return jsonRead(path);
-  if (path.endsWith('yml')) return yamlRead(path);
-  if (path.endsWith('ini')) return iniRead(path);
-  throw new Error(`File ${path} can not be parsed!`);
+  const readers = {
+    json: p => JSON.parse(fs.readFileSync(p, 'utf8')),
+    yml: p => yaml.safeLoad(fs.readFileSync(p, 'utf8')),
+    ini: p => ini.parse(fs.readFileSync(p, 'utf8')),
+  };
+  return readers[getFileExt(path)](path);
 };
 
 const walker = (before, after, func) => {

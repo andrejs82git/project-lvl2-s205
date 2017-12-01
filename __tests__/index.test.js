@@ -1,5 +1,5 @@
 import fs from 'fs';
-import gendiff, { arrDiff } from '../src';
+import gendiff, { arrDiff, getFileExt } from '../src';
 
 const fixture = './__tests__/__fixtures__/';
 
@@ -20,4 +20,8 @@ test('gendiff ini', () => {
 
 test('arrDiff', () => {
   expect(arrDiff([1, 2, 3], [2, 3])).toEqual([1]);
+});
+
+test('get extension of file', () => {
+  expect(getFileExt('/asd/a/sdf/asdfasdf.yml')).toBe('yml');
 });
