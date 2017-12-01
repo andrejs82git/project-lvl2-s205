@@ -2,7 +2,7 @@ install:
 	npm install
 
 lint:
-	npm run eslint .
+	npm run eslint ./src/
 
 start:
 	npm run babel-node -- src/bin/gendiff.js $(args)
