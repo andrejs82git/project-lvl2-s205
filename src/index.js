@@ -57,7 +57,8 @@ const gendiffCommander = () => {
     .description('Compares two configuration files and shows a difference.')
     .option('-f, --format [type]', 'Output format')
     .action((firstConfig, secondConfig, options) => {
-      gendiff(firstConfig, secondConfig, options.format);
+      const result = gendiff(firstConfig, secondConfig, options.format);
+      console.log(result);
     });
 
   program.parse(process.argv);

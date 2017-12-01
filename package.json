@@ -1,6 +1,6 @@
 {
   "name": "project-lvl2-s205",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Compares two configuration files and shows a difference.",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
