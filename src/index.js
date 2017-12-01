@@ -4,6 +4,7 @@ import yaml from 'js-yaml';
 import ini from 'ini';
 
 const JSON_LEAD_SPACES = 2;
+
 export const getFileExt = path => path.split('.').pop();
 export const unique = array =>
   array.filter((item, pos, arr) => arr.indexOf(item) === pos);
@@ -26,7 +27,7 @@ const walker = (before, after, func) => {
 };
 
 const toView = view =>
-  JSON.stringify(view, null, JSON_LEAD_SPACES).replace(/[\",]/g, '');
+  JSON.stringify(view, null, JSON_LEAD_SPACES).replace(/[",]/g, '');
 
 const gendiff = (firstConfig, secondConfig) => {
   const before = read(firstConfig);
