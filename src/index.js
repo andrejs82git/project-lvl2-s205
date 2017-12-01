@@ -4,6 +4,9 @@ import yaml from 'js-yaml';
 import ini from 'ini';
 
 export const getFileExt = path => path.split('.').pop();
+export const unique = array =>
+  array.filter((item, pos, arr) => arr.indexOf(item) === pos);
+
 
 const read = (path) => {
   const readers = {
@@ -15,7 +18,7 @@ const read = (path) => {
 };
 
 const walker = (before, after, func) => {
-  const unionKeys = new Set([...Object.keys(before), ...Object.keys(after)]);
+  const unionKeys = unique([...Object.keys(before), ...Object.keys(after)]);
   unionKeys.forEach((key) => {
     func(key, before[key], after[key]);
   });
