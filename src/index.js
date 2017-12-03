@@ -29,11 +29,10 @@ const astToText = (model) => {
       const result = node.reduce((acc, childNode) => `${acc}${iter(childNode, depth + 1)}`, '');
       return `{${result}\n${LEAD_SPACE.repeat(depth)}}`;
     }
-
     const { type, key } = node;
     switch (type) {
-      case 'eqo': return `\n${LEAD_SPACE.repeat(depth)}  ${key}: ${iter(node.val, depth + 1)}`;
-      case 'eq': return `\n${LEAD_SPACE.repeat(depth)}  ${key}: ${node.val}`;
+      case 'complex': return `\n${LEAD_SPACE.repeat(depth)}  ${key}: ${iter(node.body, depth + 1)}`;
+      case 'equal': return `\n${LEAD_SPACE.repeat(depth)}  ${key}: ${node.val}`;
       case 'add': return `\n${LEAD_SPACE.repeat(depth)}+ ${key}: ${objToJson(node.val, depth)}`;
       case 'remove': return `\n${LEAD_SPACE.repeat(depth)}- ${key}: ${objToJson(node.val, depth)}`;
       case 'change': return `\n${LEAD_SPACE.repeat(depth)}+ ${key}: ${objToJson(node.vala, depth)}\n${LEAD_SPACE.repeat(depth)}- ${key}: ${objToJson(node.valb, depth)}`;
@@ -43,32 +42,29 @@ const astToText = (model) => {
   return iter(model);
 };
 
-const createDiffAst = (before, after) => {
-  const iter = (bvalue, avalue, key) => {
-    if (_.isObject(bvalue) && _.isObject(avalue)) {
-      const unionKeys = _.union(_.keys(bvalue), _.keys(avalue));
-      const result = unionKeys.reduce((acc, k) =>
-        [...acc, iter(bvalue[k], avalue[k], k)], []);
-      return { type: 'eqo', key, val: result };
-    }
-
-    if (bvalue === avalue) {
-      return { key, type: 'eq', val: bvalue };
-    } else if (typeof bvalue === 'undefined') {
-      return { key, type: 'add', val: avalue };
-    } else if (typeof avalue === 'undefined') {
-      return { key, type: 'remove', val: bvalue };
+const createDiffAst = (beforeObject, afterObject) => {
+  const iter = (beforeProperty, afterProperty, key) => {
+    if (_.isObject(beforeProperty) && _.isObject(afterProperty)) {
+      return { key, type: 'complex', body: createDiffAst(beforeProperty, afterProperty) };
+    } else if (beforeProperty === afterProperty) {
+      return { key, type: 'equal', val: beforeProperty };
+    } else if (typeof beforeProperty === 'undefined') {
+      return { key, type: 'add', val: afterProperty };
+    } else if (typeof afterProperty === 'undefined') {
+      return { key, type: 'remove', val: beforeProperty };
     }
 
     return {
       key,
       type: 'change',
-      valb: bvalue,
-      vala: avalue,
+      valb: beforeProperty,
+      vala: afterProperty,
     };
   };
 
-  return iter(before, after).val;
+  const unionKeys = _.union(_.keys(beforeObject), _.keys(afterObject));
+  return unionKeys.reduce((acc, key) =>
+    [...acc, iter(beforeObject[key], afterObject[key], key)], []);
 };
 
 const gendiff = (firstConfigFilePath, secondConfigFilePath) => {
