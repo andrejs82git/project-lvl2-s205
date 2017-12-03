@@ -38,7 +38,3 @@ test('get extension of file', () => {
   expect(getFileExt('/asd/a/sdf/asdfasdf.yml')).toBe('yml');
 });
 
-test('test unique array', () => {
-  expect(unique([1 ,1 , 2, 2, 5, 6])).toEqual([1, 2, 5, 6]);
-});
-
