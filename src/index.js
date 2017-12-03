@@ -4,8 +4,6 @@ import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const LEAD_SPACE = ' ';
-
 export const getFileExt = fpath => path.extname(fpath).replace('.', '');
 
 const parseConfig = (configText, configType) => {
@@ -18,17 +16,17 @@ const parseConfig = (configText, configType) => {
 };
 
 const objToJson = (val, depth) => JSON.stringify(val, null, 4)
-  .replace(/^/gm, `${LEAD_SPACE.repeat(depth * 4)}`)
+  .replace(/^/gm, `${' '.repeat(depth * 4)}`)
   .replace(/[",]/g, '')
   .trim();
 
 const astToTextStrategy = {
   rootDiff: (node, depth, body) => `{${body}\n}`,
-  complex: (node, depth, body) => `\n${LEAD_SPACE.repeat(depth * 4)}${node.key}: {${body}\n${LEAD_SPACE.repeat(depth * 4)}}`,
-  equal: (node, depth) => `\n${LEAD_SPACE.repeat(depth * 4)}${node.key}: ${node.val}`,
-  add: (node, depth) => `\n${LEAD_SPACE.repeat((depth * 4) - 2)}+ ${node.key}: ${objToJson(node.val, depth)}`,
-  remove: (node, depth) => `\n${LEAD_SPACE.repeat((depth * 4) - 2)}- ${node.key}: ${objToJson(node.val, depth)}`,
-  change: (node, depth) => `\n${LEAD_SPACE.repeat((depth * 4) - 2)}+ ${node.key}: ${objToJson(node.vala, depth)}\n${LEAD_SPACE.repeat((depth * 4) - 2)}- ${node.key}: ${objToJson(node.valb, depth)}`,
+  complex: (node, depth, body) => `\n${' '.repeat(depth * 4)}${node.key}: {${body}\n${' '.repeat(depth * 4)}}`,
+  equal: (node, depth) => `\n${' '.repeat(depth * 4)}${node.key}: ${node.val}`,
+  add: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}+ ${node.key}: ${objToJson(node.val, depth)}`,
+  remove: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}- ${node.key}: ${objToJson(node.val, depth)}`,
+  change: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}+ ${node.key}: ${objToJson(node.vala, depth)}\n${' '.repeat((depth * 4) - 2)}- ${node.key}: ${objToJson(node.valb, depth)}`,
 };
 
 const astToText = (model, printStrategy) => {
