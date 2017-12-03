@@ -15,7 +15,7 @@ const parseConfig = (configText, configType) => {
   return parsers[configType](configText);
 };
 
-const objToJson = (val, depth) => JSON.stringify(val, null, 4)
+const objToJson = (object, depth) => JSON.stringify(object, null, 4)
   .replace(/^/gm, `${' '.repeat(depth * 4)}`)
   .replace(/[",]/g, '')
   .trim();
@@ -23,10 +23,10 @@ const objToJson = (val, depth) => JSON.stringify(val, null, 4)
 const astToTextStrategy = {
   rootDiff: (node, depth, body) => `{${body}\n}`,
   complex: (node, depth, body) => `\n${' '.repeat(depth * 4)}${node.key}: {${body}\n${' '.repeat(depth * 4)}}`,
-  equal: (node, depth) => `\n${' '.repeat(depth * 4)}${node.key}: ${node.val}`,
-  add: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}+ ${node.key}: ${objToJson(node.val, depth)}`,
-  remove: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}- ${node.key}: ${objToJson(node.val, depth)}`,
-  change: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}+ ${node.key}: ${objToJson(node.vala, depth)}\n${' '.repeat((depth * 4) - 2)}- ${node.key}: ${objToJson(node.valb, depth)}`,
+  equal: (node, depth) => `\n${' '.repeat(depth * 4)}${node.key}: ${node.property}`,
+  add: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}+ ${node.key}: ${objToJson(node.property, depth)}`,
+  remove: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}- ${node.key}: ${objToJson(node.property, depth)}`,
+  change: (node, depth) => `\n${' '.repeat((depth * 4) - 2)}+ ${node.key}: ${objToJson(node.afterProperty, depth)}\n${' '.repeat((depth * 4) - 2)}- ${node.key}: ${objToJson(node.beforeProperty, depth)}`,
 };
 
 const astToText = (model, printStrategy) => {
@@ -48,18 +48,18 @@ const iterDiffAst = (beforeObject, afterObject) => {
     if (_.isObject(beforeProperty) && _.isObject(afterProperty)) {
       return { key, type: 'complex', body: iterDiffAst(beforeProperty, afterProperty) };
     } else if (beforeProperty === afterProperty) {
-      return { key, type: 'equal', val: beforeProperty };
+      return { key, type: 'equal', property: beforeProperty };
     } else if (typeof beforeProperty === 'undefined') {
-      return { key, type: 'add', val: afterProperty };
+      return { key, type: 'add', property: afterProperty };
     } else if (typeof afterProperty === 'undefined') {
-      return { key, type: 'remove', val: beforeProperty };
+      return { key, type: 'remove', property: beforeProperty };
     }
 
     return {
       key,
       type: 'change',
-      valb: beforeProperty,
-      vala: afterProperty,
+      beforeProperty,
+      afterProperty,
     };
   };
 
